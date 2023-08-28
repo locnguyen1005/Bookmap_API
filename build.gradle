@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.bookmap.com/maven2/releases/"
+    }
+}
+
+dependencies {
+    if (findProperty('is_built_from_main_bookmap_project')) {
+        compile fileTree(dir: "${main_libs}", include: ['*.jar'])
+        compile project(':Level1Api')
+        compile project(':SimplifiedApiWrapper')
+    } else {
+        compileOnly group: 'com.bookmap.api', name: 'api-core', version: '7.4.0.6';
+        compileOnly group: 'com.bookmap.api', name: 'api-simplified', version: '7.4.0.6';
+
+        compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    }
+}
+
+jar {
+    archiveFileName = 'bm-strategies.jar'
+}
+
+eclipse.classpath.downloadJavadoc = true
